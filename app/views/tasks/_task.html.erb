@@ -1,0 +1,10 @@
+<div class="card">
+  <%= link_to image_tag(task.image, class: :card__img ), task_path(task)%>
+  <div class="card__body">
+    <%= link_to task.title, task_path(task), class: :card__title%>
+    <p class="card__summary">
+      <%= task.description %>
+    </p>
+    <%= link_to "by #{task.user.name}", user_path(task.user), class: :card__user %>
+  </div>
+</div>

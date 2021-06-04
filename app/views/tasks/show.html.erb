@@ -1,0 +1,55 @@
+<main class="main">
+  <div class="inner">
+    <div class="task__wrapper">
+      <p class="task__hedding">
+        <%= @task.title%>
+      </p>
+      <%= link_to "by #{@task.user.name}", user_path(@task.user), class: :task__user %>
+      <%# プロトタイプの投稿者とログインしているユーザーが同じであれば以下を表示する %>
+      <% if user_signed_in? && current_user.id == @task.user_id%>
+        <div class="task__manage">
+          <%= link_to "編集する", edit_task_path(@task), class: :task__btn %>
+          <%= link_to "削除する", task_path(@task), method: :delete, class: :task__btn %>
+        </div>
+      <% end %>
+      <%# // プロトタイプの投稿者とログインしているユーザーが同じであれば上記を表示する %>
+      <div class="task__image">
+        <%= image_tag @task.image %>
+      </div>
+      <div class="task__body">
+        <div class="task__detail">
+          <p class="detail__title">詳細</p>
+          <p class="detail__message">
+            <%= @task.description %>
+          </p>
+        </div>
+        
+      </div>
+      <div class="task__comments">
+        <%# ログインしているユーザーには以下のコメント投稿フォームを表示する %>
+        <% if user_signed_in? %>
+           <%= form_with model: [@task, @comment],local: true do |f|%>
+            <div class="field">
+               <%= f.label :text, "コメント" %><br />
+               <%= f.text_field :text, id:"comment_text" %>
+            </div>
+            <div class="actions">
+               <%= f.submit "送信する", class: :form__btn  %>
+            </div>
+           <% end %>
+        <% end %> 
+        <%# // ログインしているユーザーには上記を表示する %>
+        <ul class="comments_lists">
+          <%# 投稿に紐づくコメントを一覧する処理を記述する %>
+          <% @comments.each do |comment| %>
+            <li class="comments_list">
+               <%= comment.text %>
+               <%= link_to "(#{comment.user.name})", user_path(comment.user), class: :comment_user %>
+            </li>
+          <% end %>
+          <%# // 投稿に紐づくコメントを一覧する処理を記述する %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</main>
